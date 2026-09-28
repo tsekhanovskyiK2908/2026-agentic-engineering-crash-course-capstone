@@ -31,3 +31,6 @@ Commits are allowed only after test runs have succeded, static code analysis too
 Commit should be initiated by human after the review.
 Commit message should be proposed by agents, giving extensive description of the work completed.
 Rules/skills/docs should be kept up to date and updated when needed.
+Development is test-driven: for every task the checks (tests derived from the OpenSpec scenarios) are written first and run red before the first line of production code, then made green, then refactored. The red run output is saved as evidence in the OpenSpec change (`openspec/changes/<change>/evidence/<task>-red.txt`).
+Every review done by a checker agent is logged: the full report goes to `docs/reviews/`, and a row (date, scope, reviewer, model/effort, findings, resolution) is appended to `docs/logs/reviews.md`.
+When an agent reaches its retry limit and stops, this is logged in `docs/logs/retry-stops.md` (date, agent, model/effort, task, limit reached, last failure, what happened next) before any further action.
