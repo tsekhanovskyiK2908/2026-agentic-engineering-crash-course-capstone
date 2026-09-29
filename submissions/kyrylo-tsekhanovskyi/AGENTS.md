@@ -25,7 +25,7 @@ Testcontainers · Angular 22 + Angular Material, TypeScript, SCSS, Vitest, ESLin
 | `npm run check` | full gate: harness + backend + frontend (Docker must be running) |
 | `npm run check:be` / `check:fe` / `check:harness` | one side; add `-- --fast` for build/lint + unit tests only |
 | `npm run check:be -- --red <task-id> [--filter <expr>]` | TDD red run, saves the evidence (`check:fe` works the same) |
-| `npm run review:be` / `review:fe` / `review:harness` | cross-vendor checker; writes the report and the ledger row |
+| `npm run review:be` / `review:fe` / `review:harness` / `review:spec` | cross-vendor checker; writes the report and the ledger row |
 | `npm run skills:sync` | copies `.agents/skills` to `.claude/skills` after a skill update |
 | `npm run start`, `build:fe`, `e2e` | run the app / build the UI / Playwright (from phase 3) |
 
@@ -52,8 +52,9 @@ Testcontainers · Angular 22 + Angular Material, TypeScript, SCSS, Vitest, ESLin
 ## Workflow and definition of done
 
 1. Every change starts as an OpenSpec change (`openspec/changes/<change>/`): proposal, design, spec
-   deltas with testable scenarios, `contracts/openapi.yaml`, and `tasks.md` with `## Backend` /
-   `## Frontend` sections. The **human approves it before any code**.
+   deltas with testable scenarios, `contracts/openapi.yaml`, and `tasks.md` with numbered sections
+   headed `## N. Shared|Backend|Frontend: <area>`. A cross-vendor spec review (`npm run review:spec`)
+   runs first, then the **human approves it before any code**.
 2. Every task follows TDD: a `[checks]` task (`- [ ] 2.1 [checks] …`) comes before its implementation task.
 3. Done means: `npm run check` is green, the checker reviews are logged and resolved, the docs and ADRs
    are updated, and the change is archived into `openspec/specs/`.
@@ -64,7 +65,7 @@ Testcontainers · Angular 22 + Angular Material, TypeScript, SCSS, Vitest, ESLin
 |---|---|---|
 | Planning, orchestration, OpenSpec proposals | main session (plan mode) | Opus 5.5 `claude-opus-5-5` / high |
 | `be-maker`, `fe-maker` ([roles](.agents/roles/)) | Claude Code subagents | Opus 5.5 `claude-opus-5-5` / low |
-| `be-checker`, `fe-checker`, `harness-checker` | Codex CLI, read-only | Astra 6 `gpt-6-astra` / high |
+| `be-checker`, `fe-checker`, `harness-checker`, `spec-checker` | Codex CLI, read-only | Astra 6 `gpt-6-astra` / high |
 
 Makers write only in their own folder (`backend/` or `frontend/`). They treat `openspec/**` and this
 file as read-only, apart from ticking their own tasks, and they escalate contract changes to the human.

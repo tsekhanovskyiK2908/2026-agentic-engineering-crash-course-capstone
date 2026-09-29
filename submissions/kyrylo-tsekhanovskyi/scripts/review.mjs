@@ -20,6 +20,7 @@ const SCOPES = {
   be: { role: 'be-checker', paths: 'backend/' },
   fe: { role: 'fe-checker', paths: 'frontend/' },
   harness: { role: 'harness-checker', paths: 'everything outside backend/ and frontend/' },
+  spec: { role: 'spec-checker', paths: 'openspec/ (the OpenSpec change, its contract and openspec/config.yaml)' },
 };
 
 function activeChangeContext() {

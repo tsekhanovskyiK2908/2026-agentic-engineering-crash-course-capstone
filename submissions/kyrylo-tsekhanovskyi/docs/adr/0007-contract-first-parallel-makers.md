@@ -8,7 +8,7 @@ The capstone wants parallel agents. Two makers editing one codebase collide unle
 ## Decision
 - The spec phase produces `openspec/changes/<change>/contracts/openapi.yaml`, which the human approves
   with the spec.
-- `tasks.md` has `## Backend` and `## Frontend` sections. `be-maker` writes only `backend/`, and
+- `tasks.md` has sections headed `## N. Backend: …` and `## N. Frontend: …` (plus `Shared` for the orchestrator). `be-maker` writes only `backend/`, and
   `fe-maker` writes only `frontend/`. Both treat `openspec/**` and AGENTS.md as read-only, and
   contract changes are escalated.
 - Each side is held to the contract on its own: the backend with an integration test that compares

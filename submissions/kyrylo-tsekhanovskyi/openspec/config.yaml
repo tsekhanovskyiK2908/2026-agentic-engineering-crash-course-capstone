@@ -23,7 +23,8 @@ rules:
     - Any HTTP surface change goes into contracts/openapi.yaml of the change (OpenAPI 3.1), including
       ProblemDetails error shapes.
   tasks:
-    - Split tasks into "## Backend" and "## Frontend" sections (plus "## Shared" for work done before the makers start).
+    - Use numbered section headings "## N. <Owner>: <area>", where the owner is Shared (the orchestrator, sequential), Backend (be-maker) or Frontend (fe-maker).
+    - In each [checks] task, list the scenarios it covers as "<capability>: <scenario title>", exactly as written in the specs.
     - Before each implementation task, add a checks task tagged [checks], for example
       "- [ ] 2.1 [checks] Tests for <scenarios> (<level>)", then "- [ ] 2.2 Implement ...", then "- [ ] 2.3 Refactor".
     - A ticked [checks] task needs evidence/<id>-red.txt, created by `npm run check:<be|fe> -- --red <id>`.

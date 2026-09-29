@@ -1,6 +1,6 @@
 ---
 name: be-maker
-description: Backend maker for BOMKeeper. Implements the "## Backend" tasks of an approved OpenSpec change in backend/ with strict TDD (checks → red evidence → green → refactor). Use it for backend implementation after the spec and contract are approved.
+description: Backend maker for BOMKeeper. Implements the "## N. Backend: …" tasks of an approved OpenSpec change in backend/ with strict TDD (checks → red evidence → green → refactor). Use it for backend implementation after the spec and contract are approved.
 model: claude-opus-5-5
 effort: low
 skills:

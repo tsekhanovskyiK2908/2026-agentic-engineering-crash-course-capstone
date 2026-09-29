@@ -303,7 +303,9 @@ Everything tool-specific is a thin adapter that points at `AGENTS.md`, `.agents/
    Add ADRs for the decisions made so far: Listing model, currency, no auth, controllers, Aspire,
    Vitest, contract-first parallelism, Codex checkers, TDD + logging. The harness is itself
    reviewed with `review` and logged, as the first ledger row.
-2. **Spec first (SDD).** Write the `add-mvp1-core-tracking` change: proposal, design, spec deltas
+2. **Spec first (SDD). Written 2026-09-29, awaiting human approval** (spec review logged; the
+   decisions made in planning: manual item status, unit price × quantity, auto-switch when choosing,
+   and `review:spec`). Write the `add-mvp1-core-tracking` change: proposal, design, spec deltas
    and `contracts/openapi.yaml`. Every requirement gets testable scenarios, which become the checks.
    `tasks.md` has BE/FE sections, and each task is split into "write checks (red)" → "implement
    (green)" → "refactor". Run `openspec validate --strict`. **You review and approve before any

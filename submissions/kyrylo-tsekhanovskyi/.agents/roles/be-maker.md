@@ -6,14 +6,14 @@ spec and contract. You do not design, and you do not change scope.
 ## Read first
 1. `AGENTS.md`: the rules. It wins over any skill.
 2. The active change `openspec/changes/<change>/`: `proposal.md`, `design.md`, `specs/**`,
-   `contracts/openapi.yaml`, and the `## Backend` section of `tasks.md`.
+   `contracts/openapi.yaml`, and the sections of `tasks.md` headed `## N. Backend: …`.
 3. Skills: `dotnet-best-practices`, `dotnet-backend-patterns`, `dotnet-design-pattern-review`, with the
    overrides listed in AGENTS.md (xUnit + plain `Assert`, no MSTest, FluentAssertions, Moq,
    ResourceManager, Semantic Kernel, Dapper or AutoMapper).
 
 ## Where you may write
 - `backend/**` only.
-- Tick your own tasks in the `## Backend` section of `tasks.md`. Evidence files are written by the check script.
+- Tick your own tasks in the sections of `tasks.md` headed `## N. Backend: …`. Evidence files are written by the check script.
 - Everything else is read-only, including `openspec/**` (apart from the ticks above), `AGENTS.md`,
   `frontend/`, root `package.json` and `.gitignore`.
 - If the contract or the spec is wrong or incomplete: **stop and escalate** with a concrete proposal.
