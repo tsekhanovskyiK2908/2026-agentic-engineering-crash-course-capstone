@@ -53,6 +53,7 @@
 
       "Bash(node --version)",
       "Bash(node scripts/*)",
+      "Bash(node --test *)",
       "Bash(npm --version)",
       "Bash(npm ci)",
       "Bash(npm run *)",
@@ -88,8 +89,6 @@
       "PowerShell(Get-NetTCPConnection *)"
     ],
     "ask": [
-      "Bash(git push)",
-      "Bash(git push *)",
       "Bash(git reset *)",
       "Bash(git restore *)",
       "Bash(git checkout -- *)",
@@ -112,16 +111,48 @@
     "deny": [
       "Bash(git commit)",
       "Bash(git commit *)",
-      "Bash(git push --force *)",
-      "Bash(git push -f *)",
-      "Bash(git push * --force*)",
+      "Bash(git push)",
+      "Bash(git push *)",
       "Bash(rm -rf *)",
       "PowerShell(git commit *)",
+      "PowerShell(git push *)",
       "PowerShell(Remove-Item * -Recurse *)",
       "Read(**/.env)",
       "Read(**/.env.*)",
       "Edit(**/.env)",
       "Edit(**/.env.*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Edit|Write|MultiEdit|NotebookEdit|Bash|PowerShell|Grep|Glob",
+        "hooks": [
+          { "type": "command", "command": "node \"$CLAUDE_PROJECT_DIR/scripts/hooks/protect-env.mjs\"", "timeout": 15 }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash|PowerShell",
+        "hooks": [
+          { "type": "command", "command": "node \"$CLAUDE_PROJECT_DIR/scripts/hooks/log-action.mjs\"", "timeout": 15 }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node \"$CLAUDE_PROJECT_DIR/scripts/hooks/stop-check.mjs\"", "timeout": 600 }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node \"$CLAUDE_PROJECT_DIR/scripts/hooks/stop-check.mjs\"", "timeout": 600 }
+        ]
+      }
     ]
   }
 }

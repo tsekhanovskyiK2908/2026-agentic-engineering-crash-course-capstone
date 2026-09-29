@@ -1,0 +1,2 @@
+# Shell hooks must keep LF endings, or `#!/bin/sh` breaks under core.autocrlf=true.
+.githooks/* text eol=lf
