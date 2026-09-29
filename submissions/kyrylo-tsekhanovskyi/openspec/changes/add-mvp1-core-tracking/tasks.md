@@ -9,17 +9,17 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
 
 ## 1. Shared: walking skeleton
 
-- [ ] 1.1 Scaffold `backend/BOMKeeper.slnx`, with no project references yet:
+- [x] 1.1 Scaffold `backend/BOMKeeper.slnx`, with no project references yet:
   - projects: Entities, DAL, BLL, Api, ServiceDefaults, AppHost, BLL.Tests and Api.IntegrationTests;
   - `Directory.Build.props` (Nullable, ImplicitUsings, TreatWarningsAsErrors, `AnalysisLevel=latest-recommended`, EnforceCodeStyleInBuild) and `.editorconfig`.
 
   Verify: `dotnet build backend/BOMKeeper.slnx -warnaserror` succeeds.
-- [ ] 1.2 [checks] Tests for the backend skeleton:
+- [x] 1.2 [checks] Tests for the backend skeleton:
   - an architecture test for the reference direction: Entities ← DAL ← BLL ← Api; the Api uses DAL only for DI; the AppHost references only the Api and ServiceDefaults (BLL.Tests);
   - `GET /api/health` returns 200 through WebApplicationFactory + Testcontainers `postgres:17` with migrations applied (Api.IntegrationTests).
 
   Red run saved.
-- [ ] 1.3 Implement the backend skeleton:
+- [x] 1.3 Implement the backend skeleton:
   - the project references;
   - ServiceDefaults and the AppHost (design D1, ADR 0005);
   - the DbContext, with an initial migration applied on startup in Development;
@@ -28,22 +28,22 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
   - static files + `MapFallbackToFile("index.html")`, excluding `/api/**`.
 
   Verify: the 1.2 tests pass and `npm run check:be` is green.
-- [ ] 1.4 Scaffold `frontend/` with the `angular-new-app` skill (Angular 22.2, standalone, SCSS, Vitest). Then:
+- [x] 1.4 Scaffold `frontend/` with the `angular-new-app` skill (Angular 22.2, standalone, SCSS, Vitest). Then:
   - add Angular Material, angular-eslint and Prettier;
   - add the npm scripts `lint`, `format:check`, `test` (single run), `build` (output to `../backend/src/BOMKeeper.Api/wwwroot`), `generate:api` and `e2e`;
   - add `proxy.conf.json` for `/api`.
 
   Verify: `npm --prefix frontend run build` writes `index.html` into the Api `wwwroot`.
-- [ ] 1.5 [checks] App shell spec: a toolbar with the app name "BOMKeeper" and a router outlet, and `/` redirects to `/projects` (FE). Red run saved.
-- [ ] 1.6 Implement the app shell and the routes `/projects`, `/projects/:projectId`, `/items/:itemId` and `/listings/:listingId` (placeholder pages).
+- [x] 1.5 [checks] App shell spec: a toolbar with the app name "BOMKeeper" and a router outlet, and `/` redirects to `/projects` (FE). Red run saved.
+- [x] 1.6 Implement the app shell and the routes `/projects`, `/projects/:projectId`, `/items/:itemId` and `/listings/:listingId` (placeholder pages).
   - Generate `src/app/api/schema.d.ts` from `contracts/openapi.yaml` with `openapi-typescript`.
   - Add a staleness step to `check:fe` (`generate:api`, then fail on any diff).
 
   Verify: `npm run check:fe` is green.
-- [ ] 1.7 Extend the harness for e2e red runs: `scripts/check.mjs --red` gets an `e2e` side (Playwright), with a `check:e2e` npm script, and `scripts/lib/red.mjs` recognises the Playwright summary and `expect(...)` failures. Write the tests first, in `scripts/test/red.test.mjs`. Verify: `npm run check:harness` is green.
-- [ ] 1.8 [checks] Playwright smoke test "app loads": with the stack started by the AppHost, `/` shows the shell and the page title is "BOMKeeper" (E2E). Red run saved.
-- [ ] 1.9 Configure Playwright: Chromium, the base URL of the running Api, and a global setup that waits for `/api/health`. Verify: `npm run e2e` passes with the stack started by `npm run start`.
-- [ ] 1.10 Fill in "Build and test commands" in AGENTS.md (dotnet, npm, `dotnet ef migrations add`). Verify: `npm run check` is green end to end with Docker running.
+- [x] 1.7 Extend the harness for e2e red runs: `scripts/check.mjs --red` gets an `e2e` side (Playwright), with a `check:e2e` npm script, and `scripts/lib/red.mjs` recognises the Playwright summary and `expect(...)` failures. Write the tests first, in `scripts/test/red.test.mjs`. Verify: `npm run check:harness` is green.
+- [x] 1.8 [checks] Playwright smoke test "app loads": with the stack started by the AppHost, `/` shows the shell and the page title is "BOMKeeper" (E2E). Red run saved.
+- [x] 1.9 Configure Playwright: Chromium, the base URL of the running Api, and a global setup that waits for `/api/health`. Verify: `npm run e2e` passes with the stack started by `npm run start`.
+- [x] 1.10 Fill in "Build and test commands" in AGENTS.md (dotnet, npm, `dotnet ef migrations add`). Verify: `npm run check` is green end to end with Docker running.
 
 ## 2. Backend: projects
 

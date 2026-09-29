@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { classifyRedRun } from '../lib/red.mjs';
+import { classifyRedRun, stripAnsi } from '../lib/red.mjs';
 
 test('failing assertions (or not-implemented stubs) count as red', () => {
   for (const output of [
@@ -11,6 +11,40 @@ test('failing assertions (or not-implemented stubs) count as red', () => {
   ]) {
     assert.equal(classifyRedRun({ exitCode: 1, output }).ok, true, output);
   }
+});
+
+test('a Playwright assertion failure counts as red', () => {
+  const output = [
+    '  1) [chromium] › e2e/smoke.spec.ts:3:5 › skeleton: app loads',
+    '    Error: expect(page).toHaveTitle(expected) failed',
+    '    Expected: "BOMKeeper"',
+    '    Received: "Bomkeeper"',
+    '  1 failed',
+    '    [chromium] › e2e/smoke.spec.ts:3:5 › skeleton: app loads',
+  ].join('\n');
+  assert.equal(classifyRedRun({ exitCode: 1, output }).ok, true);
+});
+
+test('Playwright infrastructure failures are not red', () => {
+  for (const output of [
+    "Error: browserType.launch: Executable doesn't exist at C:\\ms-playwright\\chromium\n  1 failed",
+    'Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5272/\n  1 failed',
+  ]) {
+    const r = classifyRedRun({ exitCode: 1, output });
+    assert.equal(r.ok, false, output);
+    assert.match(r.reason, /infrastructure/i);
+  }
+});
+
+test('coloured (ANSI) test output is classified like plain output', () => {
+  const output =
+    '\u001b[31m\u001b[1mAssertionError\u001b[22m: expected \'/\' to be \'/projects\'\u001b[39m\n' +
+    '\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[31m2 failed\u001b[39m\u001b[22m\u001b[2m | \u001b[22m\u001b[1m\u001b[32m1 passed\u001b[39m';
+  assert.equal(classifyRedRun({ exitCode: 1, output }).ok, true);
+});
+
+test('stripAnsi removes colour codes', () => {
+  assert.equal(stripAnsi('\u001b[1m\u001b[31m2 failed\u001b[39m\u001b[22m'), '2 failed');
 });
 
 test('a passing run is not red', () => {

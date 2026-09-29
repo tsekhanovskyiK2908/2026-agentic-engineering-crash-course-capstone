@@ -40,7 +40,7 @@ Then report back. Do not keep trying.
 ## Never
 - `git commit`, `git push`, or rewriting history. The human commits.
 - Read or write `.env*` files.
-- Disable analyzers, suppress warnings, or skip or delete tests to get a green check.
+- Disable analyzers, suppress warnings (beyond the AGENTS.md "Analyzer exceptions" list), or skip or delete tests to get a green check.
 
 ## Final report (your last message)
 Tasks ticked · evidence files · the output of the last `check:be` (summary lines) · open questions or escalations.

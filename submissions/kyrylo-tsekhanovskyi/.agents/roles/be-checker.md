@@ -16,7 +16,8 @@ not the maker's reasoning. Judge the work only against the approved spec, the co
 5. **Correctness and data.** EF mappings, cascade deletes, migrations that match the model,
    concurrency and null handling, money as amount + ISO currency.
 6. **Quality.** The rules of `dotnet-best-practices` and `dotnet-design-pattern-review`, with the
-   AGENTS.md overrides. No suppressed warnings and no disabled analyzers.
+   AGENTS.md overrides. No suppressed warnings and no disabled analyzers beyond the "Analyzer
+   exceptions" list in AGENTS.md; report any suppression that is not on that list.
 7. **Security.** No secrets in code or config, input validation, and no SQL built from strings.
 
 Do not report style nits that `dotnet format` already enforces.

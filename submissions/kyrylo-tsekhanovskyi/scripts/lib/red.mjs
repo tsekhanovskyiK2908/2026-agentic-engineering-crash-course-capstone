@@ -12,21 +12,32 @@ const INFRASTRUCTURE = [
   /DockerUnavailableException|Docker is either not running|Cannot connect to the Docker daemon/i,
   /(Class|Collection|Assembly) fixture type .* threw/i,
   /did not have matching fixture data/i,
+  /browserType\.launch|Executable doesn't exist|ERR_CONNECTION_REFUSED|config\.webServer/i, // Playwright
 ];
 const FAILING_TESTS = [
   /\bFailed:\s+[1-9]\d*/, // dotnet test
   /\bTests\s+[1-9]\d* failed\b/, // Vitest
   /ℹ fail [1-9]\d*/, // node:test
+  /^\s*[1-9]\d* failed\s*$/m, // Playwright summary
 ];
 const ASSERTION_OR_STUB = [
   /\bAssert\.\w+\(\) Failure/, // xUnit
   /\bXunit\.Sdk\.\w+Exception/,
   /\bAssertionError\b/, // Vitest / Chai / node:assert
   /\bexpected .+ to /i,
+  /\bError: expect\(/, // Playwright web-first assertions
   /NotImplementedException|not implemented/i,
 ];
 
-export function classifyRedRun({ exitCode, output }) {
+// Test runners colour their output (Vitest does even without a TTY); patterns must see plain text.
+const ANSI = /\u001b\[[0-9;]*[A-Za-z]/g;
+
+export function stripAnsi(text) {
+  return String(text).replace(ANSI, '');
+}
+
+export function classifyRedRun({ exitCode, output: rawOutput }) {
+  const output = stripAnsi(rawOutput);
   const reject = (reason) => ({ ok: false, reason });
   if (exitCode === 0) return reject('Tests passed; a red run must fail. Write the checks before the code.');
   if (COMPILE_ERRORS.some((re) => re.test(output))) {

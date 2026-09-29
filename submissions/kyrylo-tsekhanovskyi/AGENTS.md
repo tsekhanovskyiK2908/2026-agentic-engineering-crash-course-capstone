@@ -19,15 +19,25 @@ Testcontainers · Angular 22 + Angular Material, TypeScript, SCSS, Vitest, ESLin
 
 ## Build and test commands
 
+Run from this folder. Prerequisites: Node 24+, .NET 10 SDK, Docker Desktop running.
+
 | Command | What it does |
 |---|---|
-| `npm run setup` | once, by the human: installs the git pre-commit hook and checks prerequisites |
-| `npm run check` | full gate: harness + backend + frontend (Docker must be running) |
+| `npm run setup` | once, by the human: installs the git pre-commit hook, restores `dotnet-ef` (`dotnet-tools.json`) and checks prerequisites |
+| `npm ci --prefix frontend` and `npx --prefix frontend playwright install chromium` | once per clone, by the human. npm dependency changes (`npm install/uninstall`, `ng add/update`) always need the human's approval; NuGet changes (`dotnet add package`) are allowed for agents by the human's decision of 2026-09-29, and versions stay in `Directory.Packages.props` |
+| `npm run check` | full gate: harness + backend (build, format, unit + integration tests) + frontend (API types, lint, Prettier, tests, build) |
 | `npm run check:be` / `check:fe` / `check:harness` | one side; add `-- --fast` for build/lint + unit tests only |
-| `npm run check:be -- --red <task-id> [--filter <expr>]` | TDD red run, saves the evidence (`check:fe` works the same) |
+| `npm run check:<be\|fe\|e2e> -- --red <task-id> [--filter <expr>]` | TDD red run: rejects compile or infrastructure failures, and saves `evidence/<task-id>-red.txt` |
+| `npm run build:fe`, then `npm run start` | builds the UI into the Api `wwwroot`, then the AppHost starts `postgres:17` and the Api: **UI + API on http://localhost:5272**, plus the Aspire dashboard (its login URL is printed). Agents start it in the background |
+| `npm run stop` (`-- --dry-run` lists only) | stops the stack: first the AppHost (graceful), then any leftover Aspire `dcp`/dashboard/Api processes of this app. Killing only the launcher from a tool orphans them. Ctrl+C in a terminal also works |
+| `npm run e2e` (or `check:e2e`) | Playwright against the running stack (`BOMKEEPER_URL` overrides the URL) |
+| `npm --prefix frontend start` | `ng serve` with hot reload; `/api` is proxied to the running Api on :5272 |
+| `npm --prefix frontend run generate:api` | regenerates `src/app/api/schema.d.ts` from the contract (`check:fe` fails if it is stale) |
+| `dotnet ef migrations add <Name> --project backend/src/BOMKeeper.DAL --output-dir Migrations` | new EF migration (applied on Api startup in Development) |
 | `npm run review:be` / `review:fe` / `review:harness` / `review:spec` | cross-vendor checker; writes the report and the ledger row |
 | `npm run skills:sync` | copies `.agents/skills` to `.claude/skills` after a skill update |
-| `npm run start`, `build:fe`, `e2e` | run the app / build the UI / Playwright (from phase 3) |
+
+NuGet versions live only in `backend/Directory.Packages.props` (central package management).
 
 ## Code style
 
@@ -37,6 +47,11 @@ Testcontainers · Angular 22 + Angular Material, TypeScript, SCSS, Vitest, ESLin
 - **Overrides of the skills:** tests use xUnit + plain `Assert`. Not used: MSTest, FluentAssertions
   (commercial licence), Moq, ResourceManager/.resx localization, Semantic Kernel, Dapper, AutoMapper
   (DTOs are mapped by hand), Tailwind (Angular Material instead), Karma/Jest (Vitest instead).
+- **Analyzer exceptions (the complete list; anything else is fixed, not suppressed):**
+  - `CS1591` (`backend/Directory.Build.props`): XML docs are not required. The documentation file is generated only so that IDE0005 (unused usings) runs at build time.
+  - `ASPIRE010` (AppHost): the Aspire CLI bundle isn't used, because the app is launched with `dotnet run`.
+  - Tests (`[tests/**.cs]` in `backend/.editorconfig`): CA1707, CA1515 and the `Async` suffix rule, because xUnit discovers public test classes by reflection and tests are named by `DisplayName` (design D7).
+  - Generated code: EF migrations (`generated_code = true`); `frontend/src/app/api/schema.d.ts` is excluded from ESLint and Prettier.
 
 ## Architecture constraints
 

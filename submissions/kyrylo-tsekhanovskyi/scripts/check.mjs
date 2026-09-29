@@ -1,23 +1,26 @@
 // The single quality gate, used by `npm run check*`, the git pre-commit hook and the agent Stop hooks.
 //
-//   node scripts/check.mjs <all|harness|be|fe> [--fast]
-//   node scripts/check.mjs <be|fe> --red <task-id> [--change <name>] [--filter <expr>]
+//   node scripts/check.mjs <all|harness|be|fe|e2e> [--fast]
+//   node scripts/check.mjs <be|fe|e2e> --red <task-id> [--change <name>] [--filter <expr>]
 //
 // --fast  : build/lint + unit tests only (no Docker, no integration tests). Used by the Stop hooks.
+// e2e     : Playwright against the running stack (`npm run start` first). Not part of `all`.
 // --red   : TDD red run. The tests must run and fail on assertions (not compile errors). The output is
 //           saved to openspec/changes/<change>/evidence/<task-id>-red.txt.
 // A side whose project does not exist yet (backend/, frontend/) is reported as skipped.
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, run, parseArgs, dockerIsRunning, today } from './lib/proc.mjs';
-import { classifyRedRun } from './lib/red.mjs';
+import { classifyRedRun, stripAnsi } from './lib/red.mjs';
 import { missingEvidence } from './lib/evidence.mjs';
 import { unresolvedReviews } from './lib/ledger.mjs';
+import { isUpToDate } from './lib/generated.mjs';
 
 const CHANGES = path.join(ROOT, 'openspec', 'changes');
 const BE_SLN = 'backend/BOMKeeper.slnx';
 const BE_UNIT = 'backend/tests/BOMKeeper.BLL.Tests';
 const FE_PKG = 'frontend/package.json';
+const E2E_CONFIG = 'frontend/playwright.config.ts';
 
 const exists = (rel) => fs.existsSync(path.join(ROOT, rel));
 
@@ -86,13 +89,33 @@ function steps(scope, fast) {
     if (!exists(FE_PKG)) {
       list.push(['frontend', null]);
     } else {
+      list.push(['fe: API types match the contract', apiTypesStep]);
       list.push(['fe: lint', 'npm --prefix frontend run lint']);
       if (!fast) list.push(['fe: prettier', 'npm --prefix frontend run format:check']);
       list.push(['fe: unit tests', 'npm --prefix frontend run test']);
       if (!fast) list.push(['fe: build', 'npm --prefix frontend run build']);
     }
   }
+  if (scope === 'e2e') {
+    list.push(exists(E2E_CONFIG) ? ['e2e: playwright', 'npm --prefix frontend run e2e'] : ['e2e', null]);
+  }
   return list;
+}
+
+// The frontend's API types are generated from the contract (design D6). The check regenerates, compares
+// and restores the file, so it never changes the working tree.
+async function apiTypesStep() {
+  const file = path.join(ROOT, 'frontend', 'src', 'app', 'api', 'schema.d.ts');
+  const upToDate = await isUpToDate(file, async () => {
+    const result = await run('npm --prefix frontend run generate:api', { quiet: true });
+    if (result.exitCode !== 0) throw new Error(`generate:api failed:\n${result.output}`);
+  });
+  if (!upToDate) {
+    console.error(
+      'frontend/src/app/api/schema.d.ts is out of date with the contract. Run `npm --prefix frontend run generate:api` and stage it.',
+    );
+  }
+  return { exitCode: upToDate ? 0 : 1 };
 }
 
 function dockerStep() {
@@ -135,8 +158,11 @@ async function red(side, taskId, { change, filter }) {
   } else if (side === 'fe') {
     if (!exists(FE_PKG)) throw new Error('frontend/ is not scaffolded yet');
     command = `npm --prefix frontend run test${filter ? ` -- ${filter}` : ''}`;
+  } else if (side === 'e2e') {
+    if (!exists(E2E_CONFIG)) throw new Error('Playwright is not configured yet (frontend/playwright.config.ts)');
+    command = `npm --prefix frontend run e2e${filter ? ` -- ${filter}` : ''}`;
   } else {
-    throw new Error('--red needs a side: be or fe');
+    throw new Error('--red needs a side: be, fe or e2e');
   }
   console.log(`=== red run for task ${taskId}: ${command} ===`);
   const { exitCode, output } = await run(command);
@@ -155,7 +181,7 @@ async function red(side, taskId, { change, filter }) {
     `# verdict: ${verdict.reason}`,
     '',
   ].join('\n');
-  fs.writeFileSync(file, header + output);
+  fs.writeFileSync(file, header + stripAnsi(output));
   console.log(`\nRed confirmed. Evidence saved to ${path.relative(ROOT, file)}`);
   return 0;
 }
