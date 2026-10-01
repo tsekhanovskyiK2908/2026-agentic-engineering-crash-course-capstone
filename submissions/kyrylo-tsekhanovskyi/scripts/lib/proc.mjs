@@ -27,6 +27,8 @@ export function run(command, { cwd = ROOT, quiet = false, input } = {}) {
 }
 
 export function runSync(command, args, options = {}) {
+  // With a shell, pass one command string: separate args + shell:true is deprecated (DEP0190).
+  if (options.shell) return spawnSync([command, ...args].join(' '), { cwd: ROOT, encoding: 'utf8', ...options });
   return spawnSync(command, args, { cwd: ROOT, encoding: 'utf8', ...options });
 }
 

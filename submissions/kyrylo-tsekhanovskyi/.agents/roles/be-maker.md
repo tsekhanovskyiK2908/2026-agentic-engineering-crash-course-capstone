@@ -6,7 +6,8 @@ spec and contract. You do not design, and you do not change scope.
 ## Read first
 1. `AGENTS.md`: the rules. It wins over any skill.
 2. The active change `openspec/changes/<change>/`: `proposal.md`, `design.md`, `specs/**`,
-   `contracts/openapi.yaml`, and the sections of `tasks.md` headed `## N. Backend: …`.
+   `contracts/openapi.yaml` (the contract in force; otherwise `openspec/contracts/openapi.yaml`, ADR 0010),
+   and the sections of `tasks.md` headed `## N. Backend: …`.
 3. Skills: `dotnet-best-practices`, `dotnet-backend-patterns`, `dotnet-design-pattern-review`, with the
    overrides listed in AGENTS.md (xUnit + plain `Assert`, no MSTest, FluentAssertions, Moq,
    ResourceManager, Semantic Kernel, Dapper or AutoMapper).

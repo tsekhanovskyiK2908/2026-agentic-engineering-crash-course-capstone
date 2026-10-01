@@ -32,6 +32,17 @@ test('a Playwright assertion failure counts as red', () => {
   assert.equal(classifyRedRun({ exitCode: 1, output }).ok, true);
 });
 
+test('a Playwright locator error in the test itself is not red', () => {
+  const output = [
+    '    Error: expect(locator).toContainText(expected) failed',
+    "    Error: strict mode violation: getByLabel('Status', { exact: true }) resolved to 2 elements:",
+    '  1 failed',
+  ].join('\n');
+  const r = classifyRedRun({ exitCode: 1, output });
+  assert.equal(r.ok, false);
+  assert.match(r.reason, /test error/i);
+});
+
 test('Playwright infrastructure failures are not red', () => {
   for (const output of [
     "Error: browserType.launch: Executable doesn't exist at C:\\ms-playwright\\chromium\n  1 failed",

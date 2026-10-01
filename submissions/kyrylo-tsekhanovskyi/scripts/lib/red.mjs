@@ -3,6 +3,8 @@
 // infrastructure or fixture failure (missing tool or script, package restore, Docker stopped) is the
 // wrong reason to be red.
 const COMPILE_ERRORS = [/\berror CS\d{4}\b/, /\berror TS\d{4,5}\b/, /\[ERROR\] TS\d{4,5}\b/];
+// Errors in the test code itself, not missing behaviour (an ambiguous or invalid selector).
+const TEST_ERRORS = [/strict mode violation/i, /Unknown engine|is not a valid selector/i];
 const NO_TESTS = [/No test is available/i, /No test files found/i, /\bTotal tests?: 0\b/i];
 const INFRASTRUCTURE = [
   /is not recognized as an internal or external command/i,
@@ -43,6 +45,9 @@ export function classifyRedRun({ exitCode, output: rawOutput }) {
   if (exitCode === 0) return reject('Tests passed; a red run must fail. Write the checks before the code.');
   if (COMPILE_ERRORS.some((re) => re.test(output))) {
     return reject('Compile error; add the minimal stubs so the tests compile and fail on assertions.');
+  }
+  if (TEST_ERRORS.some((re) => re.test(output))) {
+    return reject('Test error (ambiguous or invalid selector), not missing behaviour; fix the test and rerun.');
   }
   if (NO_TESTS.some((re) => re.test(output))) return reject('No tests ran; check the test filter or test discovery.');
   if (INFRASTRUCTURE.some((re) => re.test(output))) {

@@ -12,7 +12,7 @@
     "format:check": "prettier --check .",
     "e2e": "playwright test",
     "screens": "playwright test -c playwright.screens.config.ts",
-    "generate:api": "openapi-typescript ../openspec/changes/add-mvp1-core-tracking/contracts/openapi.yaml -o src/app/api/schema.d.ts"
+    "generate:api": "node ../scripts/generate-api.mjs"
   },
   "private": true,
   "overrides": {

@@ -92,8 +92,8 @@ submissions/kyrylo-tsekhanovskyi/
   backend/BOMKeeper.slnx
     src/BOMKeeper.Entities         # POCO entities + enums, no references
     src/BOMKeeper.DAL              # DbContext, EF configs, migrations, repositories → Entities
-    src/BOMKeeper.BLL              # services, DTOs, validation, domain rules → DAL, Entities
-    src/BOMKeeper.Api              # HTTP host: controllers, DI, ProblemDetails, OpenAPI, SPA hosting (wwwroot, gitignored)
+    src/BOMKeeper.BLL              # services, input/result types, validation, domain rules → DAL, Entities
+    src/BOMKeeper.Api              # HTTP host: controllers, DTOs (Contracts/), DI, ProblemDetails, OpenAPI, SPA hosting (wwwroot, gitignored)
                                    #   → BLL, ServiceDefaults (+DAL for DI registration only)
     src/BOMKeeper.ServiceDefaults  # Aspire: health checks, OpenTelemetry, resilience
     src/BOMKeeper.AppHost          # Aspire launcher: Postgres 17 container + Api. No business code
@@ -328,7 +328,12 @@ Everything tool-specific is a thin adapter that points at `AGENTS.md`, `.agents/
    checks → red evidence → green → refactor, and both are held to the contract. Sync point: full
    check, then `review:be` and `review:fe`. Both are logged, and findings are resolved or waived in
    the ledger before your commit.
-5. **E2E + docs.**
+5. **E2E + docs. DONE 2026-10-01** (tasks 13.1–13.4. The flow's red is a mutation check, because
+   the feature already existed; the classifier now rejects selector errors. The canonical contract
+   moved to `openspec/contracts/` (ADR 0010). README and architecture were verified by a clean clone,
+   and the pre-commit hook proof was saved in `docs/evidence/`. The change is archived (70 scenarios in
+   `openspec/specs`). The rebuild check found 14 gaps. The doc gaps were fixed in `docs/architecture.md`;
+   the spec wording ones are listed for a follow-up change).
    - Playwright smoke through the AppHost-launched stack: create project → add item → add listing +
      offer → change listing status → choose offer → summary shows the total.
    - Write README run instructions and `docs/architecture.md`.

@@ -39,7 +39,7 @@ because of the `.env` Read deny rules. Keep each command simple: no `{ …; } > 
 | `npm run e2e` (or `check:e2e`) | Playwright against the running stack (`BOMKEEPER_URL` overrides the URL) |
 | `npm run screens` | visual review: screenshots of every page and every create/edit dialog (one with validation hints) at phone (390 px), desktop (1280 px) and wide (2048 px) width against the running stack, with a temporary demo project that is deleted afterwards. Output goes to the change's `evidence/screens/` (`SCREENS_DIR` overrides it) |
 | `npm --prefix frontend start` | `ng serve` with hot reload; `/api` is proxied to the running Api on :5272 |
-| `npm --prefix frontend run generate:api` | regenerates `src/app/api/schema.d.ts` from the contract (`check:fe` fails if it is stale) |
+| `npm --prefix frontend run generate:api` | regenerates `src/app/api/schema.d.ts` from the contract in force (`check:fe` fails if it is stale) |
 | `dotnet ef migrations add <Name> --project backend/src/BOMKeeper.DAL --output-dir Migrations` | new EF migration (applied on Api startup in Development) |
 | `npm run review:be` / `review:fe` / `review:harness` / `review:spec` | cross-vendor checker; writes the report and the ledger row |
 | `npm run skills:sync` | copies `.agents/skills` to `.claude/skills` after a skill update |
@@ -80,9 +80,12 @@ NuGet versions live only in `backend/Directory.Packages.props` (central package 
 2. Every task follows TDD: a `[checks]` task (`- [ ] 2.1 [checks] …`) comes before its implementation task.
 3. Done means: `npm run check` is green, the checker reviews are logged and resolved, the docs and ADRs
    are updated, and the change is archived into `openspec/specs/`.
+   **Contract (ADR 0010):** the canonical contract is `openspec/contracts/openapi.yaml`. A change that
+   alters the API carries a full modified copy in its `contracts/openapi.yaml`, which is the contract in
+   force while the change is active. On archive, that copy replaces the canonical file.
 4. **UI changes are also looked at, not only tested** (human decision, 2026-10-01): at each sync point
    that touches `frontend/`, run `npm run build:fe`, start the stack, and run `npm run screens`. The
-   orchestrator reviews every screenshot at both widths, logs it as a "visual" row in
+   orchestrator reviews every screenshot at all three widths, logs it as a "visual" row in
    `docs/logs/reviews.md` with a report in `docs/reviews/`, and gets the findings fixed or recorded.
    Then the human looks before the commit.
 

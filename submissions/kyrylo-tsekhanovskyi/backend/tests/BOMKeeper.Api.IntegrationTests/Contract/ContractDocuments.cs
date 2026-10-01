@@ -8,17 +8,30 @@ namespace BOMKeeper.Api.IntegrationTests.Contract;
 // Loads OpenAPI documents as JSON nodes: the contract from YAML, fixtures from JSON.
 public static class ContractDocuments
 {
-    public const string ChangeName = "add-mvp1-core-tracking";
-
-    // The contract of the active change, located from the test output directory like the architecture tests.
-    public static string ContractPath =>
-        Path.Combine(
-            Path.GetDirectoryName(FindBackendDirectory())!,
-            "openspec",
-            "changes",
-            ChangeName,
-            "contracts",
-            "openapi.yaml");
+    // The contract in force (ADR 0010, same rule as scripts/lib/contract.mjs): an active change's
+    // contracts/openapi.yaml if one carries it, otherwise the canonical openspec/contracts/openapi.yaml.
+    public static string ContractPath
+    {
+        get
+        {
+            var openspec = Path.Combine(Path.GetDirectoryName(FindBackendDirectory())!, "openspec");
+            var changes = Path.Combine(openspec, "changes");
+            var fromChanges = Directory.Exists(changes)
+                ? Directory.GetDirectories(changes)
+                    .Where(dir => Path.GetFileName(dir) != "archive")
+                    .Select(dir => Path.Combine(dir, "contracts", "openapi.yaml"))
+                    .Where(File.Exists)
+                    .ToArray()
+                : [];
+            return fromChanges.Length switch
+            {
+                0 => Path.Combine(openspec, "contracts", "openapi.yaml"),
+                1 => fromChanges[0],
+                _ => throw new InvalidOperationException(
+                    $"More than one active change carries a contract: {string.Join(", ", fromChanges)}"),
+            };
+        }
+    }
 
     public static JsonNode LoadYaml(string path)
     {

@@ -6,7 +6,8 @@ spec and contract. You do not design, and you do not change scope.
 ## Read first
 1. `AGENTS.md`: the rules. It wins over any skill.
 2. The active change `openspec/changes/<change>/`: `proposal.md`, `design.md`, `specs/**`,
-   `contracts/openapi.yaml`, and the sections of `tasks.md` headed `## N. Frontend: …`.
+   `contracts/openapi.yaml` (the contract in force; otherwise `openspec/contracts/openapi.yaml`, ADR 0010),
+   and the sections of `tasks.md` headed `## N. Frontend: …`.
 3. Skills: `angular-developer`, and `angular-new-app` only when scaffolding. Use Angular Material,
    not Tailwind. Use Vitest, not Karma or Jest.
 
@@ -15,7 +16,7 @@ spec and contract. You do not design, and you do not change scope.
 - Tick your own tasks in the sections of `tasks.md` headed `## N. Frontend: …`. Evidence files are written by the check script.
 - Everything else is read-only, including `openspec/**` (apart from the ticks above), `AGENTS.md`,
   `backend/`, root `package.json` and `.gitignore`.
-- API types are **generated** from `contracts/openapi.yaml` and never hand-written. If the contract is
+- API types are **generated** from the contract in force (`npm --prefix frontend run generate:api`) and never hand-written. If the contract is
   wrong or incomplete: **stop and escalate** with a concrete proposal. Do not edit it and do not work around it.
 
 ## TDD loop, for every task

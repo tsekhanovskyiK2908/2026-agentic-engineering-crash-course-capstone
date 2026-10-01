@@ -258,10 +258,10 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
 
 ## 13. Shared: end-to-end and docs
 
-- [ ] 13.1 [checks] Playwright flow for projects: From project to total (E2E). Red run saved.
-- [ ] 13.2 Make the flow pass against the stack started by the AppHost. Fix gaps only within the specified behaviour. Verify: `npm run e2e` passes.
-- [ ] 13.3 Write the README run instructions and `docs/architecture.md`. Verify: the app can be started from the README alone on a clean clone.
-- [ ] 13.4 Verify the MVP-1 definition of done in `docs/plan-mvp1.md`:
+- [x] 13.1 [checks] Playwright flow for projects: From project to total (E2E). Red run saved.
+- [x] 13.2 Make the flow pass against the stack started by the AppHost. Fix gaps only within the specified behaviour. Verify: `npm run e2e` passes.
+- [x] 13.3 Write the README run instructions and `docs/architecture.md`. Verify: the app can be started from the README alone on a clean clone.
+- [x] 13.4 Verify the MVP-1 definition of done in `docs/plan-mvp1.md`:
   - `npm run check` and `npm run e2e` pass;
   - the manual "Solar station" scenario works;
   - the pre-commit hook blocks a commit with a failing test once.

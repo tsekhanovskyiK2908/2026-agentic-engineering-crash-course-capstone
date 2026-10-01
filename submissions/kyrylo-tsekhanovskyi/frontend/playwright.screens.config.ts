@@ -1,21 +1,26 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import { defineConfig, devices } from '@playwright/test';
 import { baseURL } from './playwright.config';
 
-// Visual review (tasks.md 17.1): screenshots of every screen at phone and desktop width, against the
-// running stack. They are evidence for a human or agent to look at, not an assertion suite, and they
-// never run as part of `npm run e2e`. `SCREENS_DIR` overrides the output folder.
+// Visual review (AGENTS.md definition of done, step 4): screenshots of every page and dialog at phone,
+// desktop and wide width, against the running stack. They are evidence for a human or agent to look at,
+// not an assertion suite, and they never run as part of `npm run e2e`.
+// Output: `SCREENS_DIR`, else the active OpenSpec change's evidence/screens, else docs/screens.
+const changesDir = path.join(__dirname, '..', 'openspec', 'changes');
+const activeChange = fs.existsSync(changesDir)
+  ? fs
+      .readdirSync(changesDir, { withFileTypes: true })
+      .filter((d) => d.isDirectory() && d.name !== 'archive')
+      .map((d) => d.name)
+      .sort()[0]
+  : undefined;
+
 export const screensDir =
   process.env['SCREENS_DIR'] ??
-  path.join(
-    __dirname,
-    '..',
-    'openspec',
-    'changes',
-    'add-mvp1-core-tracking',
-    'evidence',
-    'screens',
-  );
+  (activeChange
+    ? path.join(changesDir, activeChange, 'evidence', 'screens')
+    : path.join(__dirname, '..', 'docs', 'screens'));
 
 export default defineConfig({
   testDir: './e2e/screens',
