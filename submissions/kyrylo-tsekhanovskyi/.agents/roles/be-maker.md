@@ -38,6 +38,7 @@ node scripts/log-retry-stop.mjs --agent be-maker --model <your model> --effort <
 Then report back. Do not keep trying.
 
 ## Never
+- `cd` in a shell command: run from the submission root with root-relative paths (`dotnet test backend/...`).
 - `git commit`, `git push`, or rewriting history. The human commits.
 - Read or write `.env*` files.
 - Disable analyzers, suppress warnings (beyond the AGENTS.md "Analyzer exceptions" list), or skip or delete tests to get a green check.

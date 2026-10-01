@@ -26,6 +26,7 @@ const ASSERTION_OR_STUB = [
   /\bAssertionError\b/, // Vitest / Chai / node:assert
   /\bexpected .+ to /i,
   /\bError: expect\(/, // Playwright web-first assertions
+  /Expected (one|no) matching requests? for criteria/, // Angular HttpTestingController
   /NotImplementedException|not implemented/i,
 ];
 

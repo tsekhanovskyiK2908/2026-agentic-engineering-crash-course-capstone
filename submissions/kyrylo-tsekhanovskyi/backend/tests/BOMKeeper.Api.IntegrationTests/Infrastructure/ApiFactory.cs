@@ -1,5 +1,8 @@
+using BOMKeeper.DAL;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.PostgreSql;
 
 namespace BOMKeeper.Api.IntegrationTests.Infrastructure;
@@ -11,6 +14,9 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:17").Build();
 
     public string ConnectionString => _postgres.GetConnectionString();
+
+    // Disarmed unless a test asks it to fail the next commit.
+    public CommitFaultInjector CommitFaults { get; } = new();
 
     public Task InitializeAsync() => _postgres.StartAsync();
 
@@ -24,6 +30,8 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         builder.UseEnvironment("Development");
         builder.UseSetting("ConnectionStrings:bomkeeper", ConnectionString);
+        builder.ConfigureTestServices(services =>
+            services.ConfigureDbContext<BomKeeperDbContext>(options => options.AddInterceptors(CommitFaults)));
     }
 }
 

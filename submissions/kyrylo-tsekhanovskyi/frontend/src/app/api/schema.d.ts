@@ -292,7 +292,7 @@ export interface components {
         /** @description An amount in one currency. Never converted between currencies. */
         Money: {
             amount: number;
-            /** @description An active ISO 4217 code, e.g. UAH, EUR, USD, PLN. Unknown codes (e.g. ZZZ) are rejected with 400. */
+            /** @description An active ISO 4217 code, e.g. UAH, EUR, USD, PLN. Unknown codes (e.g. ZZZ) and special non-currency codes (e.g. XXX, XAU, XDR) are rejected with 400. */
             currency: string;
         };
         /** @description An aggregated amount in one currency (Σ unit price × quantity). It has no upper bound, because a total may exceed the single-price limit. */

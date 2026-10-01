@@ -21,6 +21,12 @@ Testcontainers · Angular 22 + Angular Material, TypeScript, SCSS, Vitest, ESLin
 
 Run from this folder. Prerequisites: Node 24+, .NET 10 SDK, Docker Desktop running.
 
+**Agents never use `cd`.** Use paths relative to this folder: `dotnet test backend/...`,
+`npm --prefix frontend run …`, and `npm --prefix frontend run ng -- generate component <path>`. A
+compound command with `cd` and a relative path always triggers a permission prompt in Claude Code,
+because of the `.env` Read deny rules. Keep each command simple: no `{ …; } > file`, and no `$?` or
+`${…}` expansions.
+
 | Command | What it does |
 |---|---|
 | `npm run setup` | once, by the human: installs the git pre-commit hook, restores `dotnet-ef` (`dotnet-tools.json`) and checks prerequisites |
@@ -31,6 +37,7 @@ Run from this folder. Prerequisites: Node 24+, .NET 10 SDK, Docker Desktop runni
 | `npm run build:fe`, then `npm run start` | builds the UI into the Api `wwwroot`, then the AppHost starts `postgres:17` and the Api: **UI + API on http://localhost:5272**, plus the Aspire dashboard (its login URL is printed). Agents start it in the background |
 | `npm run stop` (`-- --dry-run` lists only) | stops the stack: first the AppHost (graceful), then any leftover Aspire `dcp`/dashboard/Api processes of this app. Killing only the launcher from a tool orphans them. Ctrl+C in a terminal also works |
 | `npm run e2e` (or `check:e2e`) | Playwright against the running stack (`BOMKEEPER_URL` overrides the URL) |
+| `npm run screens` | visual review: screenshots of every page and every create/edit dialog (one with validation hints) at phone (390 px), desktop (1280 px) and wide (2048 px) width against the running stack, with a temporary demo project that is deleted afterwards. Output goes to the change's `evidence/screens/` (`SCREENS_DIR` overrides it) |
 | `npm --prefix frontend start` | `ng serve` with hot reload; `/api` is proxied to the running Api on :5272 |
 | `npm --prefix frontend run generate:api` | regenerates `src/app/api/schema.d.ts` from the contract (`check:fe` fails if it is stale) |
 | `dotnet ef migrations add <Name> --project backend/src/BOMKeeper.DAL --output-dir Migrations` | new EF migration (applied on Api startup in Development) |
@@ -73,6 +80,11 @@ NuGet versions live only in `backend/Directory.Packages.props` (central package 
 2. Every task follows TDD: a `[checks]` task (`- [ ] 2.1 [checks] …`) comes before its implementation task.
 3. Done means: `npm run check` is green, the checker reviews are logged and resolved, the docs and ADRs
    are updated, and the change is archived into `openspec/specs/`.
+4. **UI changes are also looked at, not only tested** (human decision, 2026-10-01): at each sync point
+   that touches `frontend/`, run `npm run build:fe`, start the stack, and run `npm run screens`. The
+   orchestrator reviews every screenshot at both widths, logs it as a "visual" row in
+   `docs/logs/reviews.md` with a report in `docs/reviews/`, and gets the findings fixed or recorded.
+   Then the human looks before the commit.
 
 ## Roles and models
 

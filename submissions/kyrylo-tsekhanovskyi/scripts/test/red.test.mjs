@@ -13,6 +13,13 @@ test('failing assertions (or not-implemented stubs) count as red', () => {
   }
 });
 
+test('an HttpTestingController expectation failure counts as red', () => {
+  const output =
+    'Error: Expected one matching request for criteria "Match URL: /api/projects", found none.\n' +
+    '      Tests  1 failed | 4 passed (5)';
+  assert.equal(classifyRedRun({ exitCode: 1, output }).ok, true);
+});
+
 test('a Playwright assertion failure counts as red', () => {
   const output = [
     '  1) [chromium] › e2e/smoke.spec.ts:3:5 › skeleton: app loads',

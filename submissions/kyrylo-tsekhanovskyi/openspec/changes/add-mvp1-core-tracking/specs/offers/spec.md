@@ -46,9 +46,11 @@ The system SHALL reject a second offer for the same item and the same listing.
 
 ### Requirement: Prices are valid money
 Every price (offer asking and agreed prices, listing agreed total) SHALL be an amount from 0 to
-999999999.99 with at most two decimal places, and a currency that is an active ISO 4217 code written in
-three uppercase letters (for example `UAH`, `EUR`, `USD`, `PLN`). Amounts in different currencies are
-never converted.
+999999999.99 with at most two decimal places, and a currency that is an active ISO 4217 code of a
+circulating currency written in three uppercase letters (for example `UAH`, `EUR`, `USD`, `PLN`). The
+special ISO 4217 codes are not currencies you can buy parts with, and they SHALL be rejected: `XXX` (no
+currency), `XTS` (testing), precious metals (`XAU`, `XAG`, `XPT`, `XPD`), bond-market units
+(`XBA`–`XBD`), `XDR`, `XSU`, `XUA`, and fund codes. Amounts in different currencies are never converted.
 
 #### Scenario: Reject a negative amount [BLL]
 - **WHEN** an offer is created or updated with asking price -1 UAH
@@ -60,6 +62,10 @@ never converted.
 
 #### Scenario: Reject an unknown currency code [BLL]
 - **WHEN** a price has currency `ZZZ`, which has the right shape but is not an ISO 4217 code
+- **THEN** the operation fails with a validation error for that price's `currency`
+
+#### Scenario: Reject special currency codes [BLL]
+- **WHEN** a price has currency `XXX`, `XTS`, `XAU` or `XDR`, which are active ISO 4217 codes but not circulating currencies
 - **THEN** the operation fails with a validation error for that price's `currency`
 
 #### Scenario: Reject more than two decimal places [BLL]

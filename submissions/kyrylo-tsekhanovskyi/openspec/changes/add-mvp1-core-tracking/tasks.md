@@ -47,7 +47,7 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
 
 ## 2. Backend: projects
 
-- [ ] 2.1 [checks] Tests (BLL, API) for:
+- [x] 2.1 [checks] Tests (BLL, API) for:
   - projects: Create a project;
   - projects: Reject a blank or too long name;
   - projects: Get a project;
@@ -56,18 +56,18 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
   - projects: Unknown id.
 
   Red run saved.
-- [ ] 2.2 Implement:
+- [x] 2.2 Implement:
   - the Project entity (with the `seq` identity column, design D2), its EF configuration and migration, and its repository;
   - the projects service (validation, `TimeProvider`);
   - the projects controller: `listProjects` (counts 0 for now), `createProject`, `getProject`, `updateProject`, `deleteProject`;
   - the 400/404 problem-details mapping.
 
   Verify: the 2.1 tests pass and `npm run check:be` is green.
-- [ ] 2.3 Refactor. Verify: `npm run check:be` is still green.
+- [x] 2.3 Refactor. Verify: `npm run check:be` is still green.
 
 ## 3. Backend: items
 
-- [ ] 3.1 [checks] Tests (BLL, API) for:
+- [x] 3.1 [checks] Tests (BLL, API) for:
   - items: Add an item;
   - items: Reject an invalid quantity;
   - items: Reject a blank name;
@@ -79,17 +79,17 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
   - items: Unknown status value.
 
   Red run saved.
-- [ ] 3.2 Implement:
+- [x] 3.2 Implement:
   - the Item entity and migration (cascade from Project; the `seq` identity column for ordering, design D2) and its repository;
   - the items service;
   - the items controller: `listProjectItems` (`chosenOffer` null for now), `createItem`, `getItem`, `updateItem`, `deleteItem`, `setItemStatus`.
 
   Verify: the 3.1 tests pass and `npm run check:be` is green.
-- [ ] 3.3 Refactor. Verify: `npm run check:be` is still green.
+- [x] 3.3 Refactor. Verify: `npm run check:be` is still green.
 
 ## 4. Backend: listings
 
-- [ ] 4.1 [checks] Tests (BLL, API) for:
+- [x] 4.1 [checks] Tests (BLL, API) for:
   - listings: Add a listing;
   - listings: Reject an invalid URL;
   - listings: List listings;
@@ -101,18 +101,18 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
   - projects: List projects with counts.
 
   Red run saved.
-- [ ] 4.2 Implement:
+- [x] 4.2 Implement:
   - the Listing entity and migration (cascade from Project; `seq`; money as a complex value, design D2) and its repository;
   - the listings service (status time rules; money validation shared with offers);
   - the listings controller: `listProjectListings`, `createListing`, `getListing`, `updateListing`, `deleteListing`, `setListingStatus`;
   - the project counts in `listProjects`.
 
   Verify: the 4.1 tests pass and `npm run check:be` is green.
-- [ ] 4.3 Refactor. Verify: `npm run check:be` is still green.
+- [x] 4.3 Refactor. Verify: `npm run check:be` is still green.
 
 ## 5. Backend: offers and rules
 
-- [ ] 5.1 [checks] Tests (BLL, API) for:
+- [x] 5.1 [checks] Tests (BLL, API) for:
   - offers: Create an offer;
   - offers: A bundle listing supplies two items;
   - offers: Listing from another project;
@@ -129,14 +129,14 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
   - offers: Set fit through the API.
 
   Red run saved.
-- [ ] 5.2 Implement:
+- [x] 5.2 Implement:
   - the Offer entity and migration (cascades from Item and Listing; `seq`; a unique index on item + listing);
   - the offers service (same-project and duplicate rules → `BusinessRuleException`);
   - the offers controller: `createOffer`, `listItemOffers`, `listListingOffers`, `updateOffer`, `deleteOffer`, `setOfferFit`;
   - the 409 mapping to `/problems/<code>`.
 
   Verify: the 5.1 tests pass and `npm run check:be` is green.
-- [ ] 5.3 [checks] Tests (BLL, API) for:
+- [x] 5.3 [checks] Tests (BLL, API) for:
   - offers: Choosing switches the choice;
   - offers: Choice is per item;
   - offers: Un-choose an offer;
@@ -150,17 +150,19 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
   - projects: Delete a project and its data.
 
   Red run saved.
-- [ ] 5.4 Implement:
+- [x] 5.4 Implement:
   - `setOfferChoice` with auto-switch as ordered writes in one transaction (clear, then set), backed by a partial unique index on `item_id WHERE is_chosen` (design D2, D3);
   - `chosenOffer` in item responses;
   - checks that the cascades behave as specified.
 
   Verify: the 5.3 tests pass and `npm run check:be` is green.
-- [ ] 5.5 Refactor. Verify: `npm run check:be` is still green.
+- [x] 5.5 Refactor. Verify: `npm run check:be` is still green.
+- [x] 5.6 [checks] Tests (BLL) for offers: Reject special currency codes (added by the human's decision of 2026-09-30). Red run saved.
+- [x] 5.7 Remove the special ISO 4217 codes from the BLL currency list (design D3), with a comment naming the decision. Verify: the 5.6 tests pass and `npm run check:be` is green.
 
 ## 6. Backend: project summary
 
-- [ ] 6.1 [checks] Tests (BLL, API) for:
+- [x] 6.1 [checks] Tests (BLL, API) for:
   - projects: Counts by status include zeros;
   - projects: Total uses agreed price over asking price, times quantity;
   - projects: Totals are kept per currency;
@@ -169,12 +171,12 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
   - projects: Summary endpoint.
 
   Red run saved.
-- [ ] 6.2 Implement the summary service and `getProjectSummary` (design D3). Verify: the 6.1 tests pass and `npm run check:be` is green.
-- [ ] 6.3 Refactor. Verify: `npm run check:be` is still green.
+- [x] 6.2 Implement the summary service and `getProjectSummary` (design D3). Verify: the 6.1 tests pass and `npm run check:be` is green.
+- [x] 6.3 Refactor. Verify: `npm run check:be` is still green.
 
 ## 7. Backend: contract drift
 
-- [ ] 7.1 [checks] Unit tests for the OpenAPI normalizer on small fixtures (design D5).
+- [x] 7.1 [checks] Unit tests for the OpenAPI normalizer on small fixtures (design D5).
   - **Reported:**
     - a missing path or method;
     - a changed `operationId`, enum, `required` set or property type;
@@ -188,34 +190,34 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
     - `/api/health`.
 
   Add the drift test that compares `/openapi/v1.json` with `contracts/openapi.yaml` (Api.IntegrationTests). Red run saved.
-- [ ] 7.2 Implement the normalizer and the comparer. Fix any drift **in the code**; if the contract itself looks wrong, stop and escalate. Verify: the drift test passes and `npm run check:be` is green.
-- [ ] 7.3 Refactor. Verify: `npm run check:be` is still green.
+- [x] 7.2 Implement the normalizer and the comparer. Fix any drift **in the code**; if the contract itself looks wrong, stop and escalate. Verify: the drift test passes and `npm run check:be` is green.
+- [x] 7.3 Refactor. Verify: `npm run check:be` is still green.
 
 ## 8. Frontend: API services
 
-- [ ] 8.1 [checks] `HttpTestingController` specs for the projects, items, listings and offers services:
+- [x] 8.1 [checks] `HttpTestingController` specs for the projects, items, listings and offers services:
   - every contract operation uses the right method, URL and body;
   - a `400` problem details response is mapped to field errors;
   - a `409` problem details response is mapped to its rule code (FE).
 
   Red run saved.
-- [ ] 8.2 Implement the typed services with the generated `schema.d.ts` types and a shared problem-details mapper. Verify: the 8.1 specs pass and `npm run check:fe` is green.
-- [ ] 8.3 Refactor. Verify: `npm run check:fe` is still green.
+- [x] 8.2 Implement the typed services with the generated `schema.d.ts` types and a shared problem-details mapper. Verify: the 8.1 specs pass and `npm run check:fe` is green.
+- [x] 8.3 Refactor. Verify: `npm run check:fe` is still green.
 
 ## 9. Frontend: project list
 
-- [ ] 9.1 [checks] Specs (FE) for:
+- [x] 9.1 [checks] Specs (FE) for:
   - projects: Create a project from the UI;
   - projects: Empty project list;
   - projects: Confirm before deleting.
 
   Red run saved.
-- [ ] 9.2 Implement the project list page: a Material list, the "New project" dialog and the delete confirmation. Verify: the 9.1 specs pass and `npm run check:fe` is green.
-- [ ] 9.3 Refactor. Verify: `npm run check:fe` is still green.
+- [x] 9.2 Implement the project list page: a Material list, the "New project" dialog and the delete confirmation. Verify: the 9.1 specs pass and `npm run check:fe` is green.
+- [x] 9.3 Refactor. Verify: `npm run check:fe` is still green.
 
 ## 10. Frontend: project detail
 
-- [ ] 10.1 [checks] Specs (FE) for:
+- [x] 10.1 [checks] Specs (FE) for:
   - items: Items table;
   - items: Change status from the items table;
   - listings: Listings tab;
@@ -223,18 +225,18 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
   - projects: Summary card on the project page.
 
   Red run saved.
-- [ ] 10.2 Implement the project detail page: the "Items" and "Listings" tabs, the item and listing dialogs (showing server field errors) and the summary card. Verify: the 10.1 specs pass and `npm run check:fe` is green.
-- [ ] 10.3 Refactor. Verify: `npm run check:fe` is still green.
+- [x] 10.2 Implement the project detail page: the "Items" and "Listings" tabs, the item and listing dialogs (showing server field errors) and the summary card. Verify: the 10.1 specs pass and `npm run check:fe` is green.
+- [x] 10.3 Refactor. Verify: `npm run check:fe` is still green.
 
 ## 11. Frontend: item detail
 
-- [ ] 11.1 [checks] Specs (FE) for:
+- [x] 11.1 [checks] Specs (FE) for:
   - offers: Link a listing from the item page;
   - offers: Choose an offer from the item page;
   - offers: Wrong items are visible.
 
   Red run saved.
-- [ ] 11.2 Implement the item detail page:
+- [x] 11.2 Implement the item detail page:
   - the offer list;
   - the "Add offer" dialog with a picker of the project's listings;
   - price editing;
@@ -242,17 +244,17 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
   - choose and un-choose.
 
   Verify: the 11.1 specs pass and `npm run check:fe` is green.
-- [ ] 11.3 Refactor. Verify: `npm run check:fe` is still green.
+- [x] 11.3 Refactor. Verify: `npm run check:fe` is still green.
 
 ## 12. Frontend: listing detail
 
-- [ ] 12.1 [checks] Specs (FE) for:
+- [x] 12.1 [checks] Specs (FE) for:
   - listings: Change status on the listing page;
   - listings: Offers across items.
 
   Red run saved.
-- [ ] 12.2 Implement the listing detail page: its fields, the status selector with the status time, and the offers across items. Verify: the 12.1 specs pass and `npm run check:fe` is green.
-- [ ] 12.3 Refactor. Verify: `npm run check:fe` is still green.
+- [x] 12.2 Implement the listing detail page: its fields, the status selector with the status time, and the offers across items. Verify: the 12.1 specs pass and `npm run check:fe` is green.
+- [x] 12.3 Refactor. Verify: `npm run check:fe` is still green.
 
 ## 13. Shared: end-to-end and docs
 
@@ -265,3 +267,100 @@ repeat those titles (design D7). The red run is `npm run check:<be|fe|e2e> -- --
   - the pre-commit hook blocks a commit with a failing test once.
 
   Then run `openspec archive add-mvp1-core-tracking`. Verify: `openspec validate --all --strict` passes and `openspec/specs/` holds projects, items, listings and offers.
+
+## 14. Backend: review fixes
+
+Findings of `docs/reviews/2026-09-30-be-be-checker.md` (all P2). Each [checks] task lists findings, not spec scenarios.
+
+- [x] 14.1 [checks] Tests for the findings:
+  - choosing an offer when the transaction fails transiently after a save and before the commit: the retried operation rebuilds its tracked state, so the response and the database agree (API);
+  - two concurrent `POST /api/items/{itemId}/offers` for the same listing: one `201` and one `409` with type `/problems/duplicate-offer`, never a `500` (API);
+  - normalizer fixtures: a nullable union (`oneOf` with null) whose sibling `maxLength`, `minimum` or `pattern` differs is reported (API).
+
+  Red run saved.
+- [x] 14.2 Implement:
+  - each retry attempt of the unit of work starts from fresh tracked state;
+  - a unique-index violation on offer(item, listing) is translated through the DAL into `BusinessRuleException("duplicate-offer")`;
+  - the normalizer keeps a nullable wrapper's constraints.
+
+  Verify: the 14.1 tests pass and `npm run check:be` is green.
+
+## 15. Frontend: review fixes
+
+Findings of `docs/reviews/2026-09-30-fe-fe-checker.md` (all P2). Each [checks] task lists findings, not spec scenarios.
+
+- [x] 15.1 [checks] Specs (FE) for the findings:
+  - the project, item and listing detail pages reload when the route id changes, and ignore a superseded response;
+  - on the item page, a failed offers load stays visible when the item load succeeds later;
+  - a detail page destroyed before its delete response arrives neither navigates nor reloads;
+  - the listing status selector shows the persisted status again after a failed PATCH;
+  - clearing the amount of an optional price makes the dialog valid, even with a stale or partial currency;
+  - item, listing and offer collections show a loading state while pending, and the empty message only after a successful empty response.
+
+  Red run saved.
+- [x] 15.2 Implement the fixes. Verify: the 15.1 specs pass and `npm run check:fe` is green.
+
+## 16. Frontend: UI polish
+
+Findings of the orchestrator's visual review of 2026-10-01 (the screens worked, but looked unfinished). Each [checks] task lists findings, not spec scenarios.
+
+- [x] 16.1 [checks] Specs (FE) for the findings:
+  - the app toolbar has its own container background, distinct from the page;
+  - listing status is changed with a Material select (`mat-select`), not a native `<select>`;
+  - item status, listing status and fit chips carry a per-value class (e.g. `status-ordered`, `listing-scam`, `fit-wrong-item`) that maps to distinct theme colors, and clickable status chips show a dropdown icon;
+  - the offer card labels its chips ("Listing: Found", "Fit: Fits");
+  - the item page shows "Quantity: 1" with no dangling separator and labels the notes;
+  - destructive actions (delete project/item/listing/offer) are styled as destructive and differ from edit actions;
+  - a listing URL is shown as a short "Open ad" link with the host name (new tab, `rel="noopener"`), not the full URL;
+  - the status time is shown without seconds;
+  - the offer tables use short column headers ("Asking", "Agreed") with the unit meaning in the header's tooltip or caption;
+  - the listing picker in "Add offer" has a label that is not truncated.
+
+  Red run saved.
+- [x] 16.2 Implement the polish:
+  - global styles in `styles.scss` built on Material system tokens: app bar, link style, chip colors;
+  - a Material select for the listing status;
+  - the labels, header and URL changes above;
+  - on narrow widths, no truncated project meta and no three-line table headers.
+
+  Verify: the 16.1 specs pass, `npm run check:fe` is green, and `npm run screens` shows the fixes at phone and desktop width.
+
+## 17. Shared: visual review
+
+- [x] 17.1 `npm run screens`: a Playwright capture of the project list, the project detail (both tabs), the item detail, the listing detail and the "Add offer" dialog, at phone (390 px) and desktop (1280 px) width, against the running stack. It uses its own temporary demo project, created through the API and deleted afterwards, and writes to `evidence/screens/`. It is not part of `npm run e2e`. Verify: all screenshots are written, and the demo project is gone afterwards.
+- [x] 17.2 Review the screenshots after section 16: the orchestrator, then the human. Findings are fixed or recorded in `docs/logs/reviews.md` as a "visual" review row.
+
+## 18. Frontend: visual review fixes
+
+Findings of `docs/reviews/2026-10-01-fe-visual-orchestrator.md` (1×P2, 4×P3). Each [checks] task lists findings, not spec scenarios.
+
+- [x] 18.1 [checks] Specs (FE) for the findings:
+  - at phone width (narrow layout), the project's listings and the listing's offers render so that status and fit stay visible without horizontal scrolling;
+  - status and fit values are shown with human labels ("Wrong item", "Not quite right", "Not responding"), both in chips and in selects;
+  - the project list pluralizes correctly ("1 listing", "1 item");
+  - the listing page shows its status once (the select), not a duplicate chip;
+  - the four item statuses have distinct chip classes or tones.
+
+  Red run saved.
+- [x] 18.2 Implement the fixes. Verify: the 18.1 specs pass, `npm run check:fe` is green, and the orchestrator re-runs `npm run screens` and reviews phone + desktop.
+- [x] 18.3 Phone-only CSS leftovers from the second visual pass: the "Prices are per unit of the item." caption is squeezed into a one-word-wide column above the stacked offers, and short stray dashes appear at the left edge of the stacked listing rows. CSS-only, with no testable behaviour. Verify: `npm run check:fe` is green and the orchestrator's `npm run screens` phone screenshots are clean.
+
+## 19. Frontend: dialog layout and spacing
+
+Findings of the human visual review (`docs/reviews/2026-10-01-fe-visual-human.md`, 2×P2). Each [checks] task lists findings, not spec scenarios.
+
+- [x] 19.1 [checks] Specs (FE) for the dialog structure:
+  - every create/edit dialog (project, item, listing, offer, offer prices) renders its fields in one `.dialog-form` column, in the documented order;
+  - only an amount and its currency share a `.form-row`;
+  - every dialog uses the shared dialog width;
+  - the project list page puts its list in a section separated from the heading row (`.page-header` + content).
+
+  Red run saved.
+- [x] 19.2 Implement:
+  - a shared dialog form style: one column of full-width fields, a 16 px vertical gap, rows aligned to the top so hints and errors never shift neighbours, and amount + currency on one row (currency narrow);
+  - one dialog width for all dialogs (about 560 px, full width on phones);
+  - consistent `.page-header` spacing (heading and action, then a 16–24 px gap) on all pages.
+
+  Verify: `npm run check:fe` is green.
+- [x] 19.3 (Shared, orchestrator) Extend `npm run screens` with the new project, edit project, add item, add listing, add offer and edit prices dialogs, and a third viewport `wide` (2048 px). Then re-run it and review all screens. Verify: the dialogs and the wide viewport appear in `evidence/screens/`, and the visual review row is resolved.
+- [x] 19.4 Dialog spacing with validation hints: when a field shows its hint or error ("Required."), the text eats the 16 px row gap and nearly touches the next field (`evidence/screens/desktop-10-add-listing-dialog-errors.png`, `phone-10-…`). Keep a visible gap below the hint, the same rhythm with and without errors. CSS-only. Verify: `npm run check:fe` is green and the orchestrator's `npm run screens` shows even spacing in dialog 10 at all widths.

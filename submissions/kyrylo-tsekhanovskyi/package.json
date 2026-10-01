@@ -17,6 +17,7 @@
     "start": "dotnet run --project backend/src/BOMKeeper.AppHost",
     "stop": "node scripts/stop.mjs",
     "e2e": "npm --prefix frontend run e2e",
+    "screens": "npm --prefix frontend run screens",
     "review:be": "node scripts/review.mjs be",
     "review:fe": "node scripts/review.mjs fe",
     "review:harness": "node scripts/review.mjs harness",

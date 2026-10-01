@@ -5,19 +5,27 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, run, runSync, tail } from '../lib/proc.mjs';
 import { logRetryStop } from '../lib/retry-stop.mjs';
-import { sidesToCheck } from '../lib/stop.mjs';
+import { resolveAgentType, sidesToCheck } from '../lib/stop.mjs';
 import { readPayload } from './payload.mjs';
 
 const MAX_REENTRIES = 3;
 
 const payload = await readPayload();
-const key = [payload.session, payload.agent].filter(Boolean).join('-').replace(/[^\w.-]/g, '_');
+const agentType = resolveAgentType(payload.raw);
+// One counter per subagent instance; never shared with the main session.
+const key = [payload.session, payload.raw.agent_id || agentType || 'main']
+  .join('-')
+  .replace(/[^\w.-]/g, '_');
 const stateDir = path.join(ROOT, '.agent-work', 'stop-hook');
 const stateFile = path.join(stateDir, `${key}.json`);
 const reset = () => fs.rmSync(stateFile, { force: true });
 
 const changed = (dir) => Boolean(runSync('git', ['status', '--porcelain', '--', dir]).stdout?.trim());
-const sides = sidesToCheck(payload.agent, { be: changed('backend'), fe: changed('frontend') });
+const sides = sidesToCheck(
+  agentType,
+  { be: changed('backend'), fe: changed('frontend') },
+  payload.raw.hook_event_name ?? 'SubagentStop',
+);
 if (!sides.length) {
   reset();
   process.exit(0);
@@ -39,7 +47,7 @@ const count = (fs.existsSync(stateFile) ? JSON.parse(fs.readFileSync(stateFile, 
 if (count > MAX_REENTRIES) {
   reset();
   logRetryStop({
-    agent: payload.agent ?? `${payload.tool} main session`,
+    agent: agentType ?? 'unidentified agent',
     model: payload.model ?? 'see session',
     effort: 'see session',
     task: '-',

@@ -319,7 +319,11 @@ Everything tool-specific is a thin adapter that points at `AGENTS.md`, `.agents/
    - Playwright configured.
    - `npm run start` serves the UI from the Api, and `npm run check` is green end to end. Fill in
      AGENTS.md "Build and test commands".
-4. **Features, in parallel, TDD.** be-maker handles the entities, DAL, BLL rules, controllers and
+4. **Features, in parallel, TDD. DONE 2026-10-01** (be-maker: tasks 2–7, 5.6–5.7, 14; fe-maker: 8–12, 15;
+   the be and fe reviews were logged and their 9 P2 findings fixed through tasks 14/15; the special
+   currency codes are excluded by the human's decision; then a visual review, UI polish in tasks 16–18,
+   and `npm run screens`, which made the visual review a permanent definition-of-done step).
+   be-maker handles the entities, DAL, BLL rules, controllers and
    integration tests. fe-maker handles the screens and services (Vitest). Every task follows
    checks → red evidence → green → refactor, and both are held to the contract. Sync point: full
    check, then `review:be` and `review:fe`. Both are logged, and findings are resolved or waived in

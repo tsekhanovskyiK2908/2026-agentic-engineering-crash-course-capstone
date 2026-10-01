@@ -1,3 +1,4 @@
+using BOMKeeper.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,6 +16,11 @@ public static class DalRegistration
         where TBuilder : IHostApplicationBuilder
     {
         builder.AddNpgsqlDbContext<BomKeeperDbContext>(ConnectionName);
+        builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+        builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+        builder.Services.AddScoped<IItemRepository, ItemRepository>();
+        builder.Services.AddScoped<IListingRepository, ListingRepository>();
+        builder.Services.AddScoped<IOfferRepository, OfferRepository>();
         return builder;
     }
 

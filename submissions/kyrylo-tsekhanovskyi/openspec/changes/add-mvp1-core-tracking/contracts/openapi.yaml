@@ -494,7 +494,7 @@ components:
         currency:
           type: string
           pattern: '^[A-Z]{3}$'
-          description: An active ISO 4217 code, e.g. UAH, EUR, USD, PLN. Unknown codes (e.g. ZZZ) are rejected with 400.
+          description: An active ISO 4217 code, e.g. UAH, EUR, USD, PLN. Unknown codes (e.g. ZZZ) and special non-currency codes (e.g. XXX, XAU, XDR) are rejected with 400.
     MoneyTotal:
       type: object
       description: >

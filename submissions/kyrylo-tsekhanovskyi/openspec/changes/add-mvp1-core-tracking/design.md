@@ -75,6 +75,9 @@ because both would need to touch the root `package.json`, `.gitignore` and the A
   snapshot of the ISO 4217 list, with its date in a comment). The list does not depend on ICU or
   culture data, which is unavailable in invariant-globalization containers. The contract states the
   `^[A-Z]{3}$` shape, and the BLL additionally rejects unknown codes such as `ZZZ` (ADR 0002).
+  Human decision of 2026-09-30: the list holds circulating currencies only. The special ISO 4217 codes
+  (XXX, XTS, the metals XAU/XAG/XPT/XPD, the bond units XBA–XBD, XDR, XSU, XUA, and the fund codes such
+  as BOV, CHE, CHW, CLF, COU, MXV, USN, UYI, UYW) are excluded.
 - Time comes from an injected `TimeProvider`, so `createdAt` and `statusChangedAt` are testable.
 - The summary is computed in memory from the project's items and offers, with `decimal` arithmetic.
   Totals are ordered by currency code.

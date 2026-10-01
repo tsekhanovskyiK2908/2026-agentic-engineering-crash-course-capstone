@@ -21,7 +21,7 @@ spec and contract. You do not design, and you do not change scope.
 ## TDD loop, for every task
 1. **Checks first.** Write the Vitest specs for the task's scenarios (components with TestBed, HTTP
    services with `HttpTestingController`). Add only the stubs needed to compile.
-2. **Red.** `npm run check:fe -- --red <task-id> --filter "<vitest args, e.g. --include src/app/items/**>"`.
+2. **Red.** `npm run check:fe -- --red <task-id> --filter "--include src/app/<area>/**/*.spec.ts"` (spec files only: a bare `**` makes Vitest load non-spec files).
    The script rejects compile errors and passing runs, and saves the evidence to
    `openspec/changes/<change>/evidence/<task-id>-red.txt`.
 3. **Green.** Implement until `npm run check:fe -- --fast` passes, then `npm run check:fe`.
@@ -37,6 +37,7 @@ node scripts/log-retry-stop.mjs --agent fe-maker --model <your model> --effort <
 Then report back. Do not keep trying.
 
 ## Never
+- `cd` in a shell command: run from the submission root (`npm --prefix frontend run ng -- generate component <path>`, `npm --prefix frontend run test -- --include "…"`).
 - `git commit`, `git push`, or rewriting history. The human commits.
 - Read or write `.env*` files.
 - Disable lint rules, add `// eslint-disable`, or skip or delete specs to get a green check.
