@@ -7,7 +7,7 @@
   contract-first parallel work, dispatch both in the background, then run `npm run check`,
   `npm run review:be` and `npm run review:fe` at the sync point. If `frontend/` changed, also do the
   visual review (AGENTS.md, definition of done, step 4): run `npm run screens` and read every PNG at
-  both widths. A green test run is not proof that the UI looks right.
+  all three widths (phone 390, desktop 1280, wide 2048 px). A green test run is not proof that the UI looks right.
 - If a maker stops at its attempt limit: check that the stop is in `docs/logs/retry-stops.md`, then
   retry that task once at high effort and record the level change in `docs/autonomy-log.md`.
 - Running the app: start `npm run start` with the Bash tool's background mode, and always finish with
